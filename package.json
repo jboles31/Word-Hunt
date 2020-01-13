@@ -1,0 +1,51 @@
+{
+  "name": "Word-Hunt",
+  "version": "1.0.0",
+  "description": "Word-Hunt game built with React.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "build": "webpack --config webpack.config.js",
+    "dev": "npm-run-all --parallel dev:*",
+    "dev:build": "webpack -d --watch",
+    "dev:start": "nodemon server/index.js"
+  },
+  "dependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-react": "^7.0.0",
+    "axios": "^0.19.0",
+    "babel-loader": "^8.0.6",
+    "body-parser": "^1.19.0",
+    "css-loader": "^3.2.0",
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "file-loader": "^4.2.0",
+    "image-webpack-loader": "^6.0.0",
+    "jquery": "^3.4.1",
+    "mongoose": "^5.7.7",
+    "npm-run-all": "^4.1.5",
+    "react": "^16.10.2",
+    "react-bootstrap": "^1.0.0-beta.14",
+    "react-dom": "^16.10.2",
+    "react-icons": "^3.7.0",
+    "sass": "^1.23.0",
+    "sass-loader": "^8.0.0",
+    "style-loader": "^1.0.0",
+    "webpack": "^4.41.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.9"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jboles31/Word-Hunt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jboles31/Word-Hunt/issues"
+  },
+  "homepage": "https://github.com/jboles31/Word-Hunt#readme"
+}
