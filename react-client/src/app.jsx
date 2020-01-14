@@ -18,11 +18,11 @@ class App extends React.Component{
 
     this.getWords = this.getWords.bind(this)
 
-    this.randomizeBoard = this.randomizeBoard.bind(this)
+    // this.randomizeBoard = this.randomizeBoard.bind(this)
     this.publishBoard = this.publishBoard.bind(this)
     this.updateBoard = this.updateBoard.bind(this)
     this.checkBoard = this.checkBoard.bind(this)
-    this.checkSolvability = this.checkSolvability.bind(this)
+    // this.checkSolvability = this.checkSolvability.bind(this)
     this.restart = this.restart.bind(this)
   }
 
@@ -34,23 +34,42 @@ class App extends React.Component{
 
   getWords() {
     let list = words
-    console.log(list)
+    let targets = {}
 
+    let chooseWords = () => {
+      let length = Object.keys(targets).length
 
+      if (length < 5) {
+        let choice = list[Math.floor(Math.random() * Math.floor(list.length))]
+        targets[choice] = false
+        chooseWords()
+      } else {
+        return
+      }
+
+    } 
+    chooseWords()
+
+    this.setState({
+      words: targets
+    })
   }
   // Radomize
 
-  randomizeBoard(x) {
-
-      let results = []
-      for (let i = 0; i < x; i++) {
-        let arr = []
-        for (let j = 0; j < x; j++) {
-          arr.push(Math.random() >= 0.5)
-        }
-        results.push(arr)
+  buildBoard() {
+    let list = alphabet
+    let results = []
+    for (let i = 0; i < 6; i++) {
+      let arr = []
+      for (let j = 0; j < 6; j++) {
+        arr.push(list[Math.floor(Math.random() * Math.floor(list.length))])
       }
-      this.checkSolvability(results, x)
+      results.push(arr)
+    }
+    console.log('results', results)
+    this.setState({
+      board: results
+    })
   }
 
   // Publish Board
@@ -116,33 +135,33 @@ class App extends React.Component{
 
   // Check if Board is Solvable
 
-  checkSolvability(board, x) {
-    let original = JSON.stringify(board)
+  // checkSolvability(board, x) {
+  //   let original = JSON.stringify(board)
 
-    board.map((row, rowIndex) => {
-      if (rowIndex < 4) {
-        row.map((tile, colIndex) => {
-          if (tile) {
-            board = this.updateBoard(rowIndex + 1, colIndex, board, false)
-          }
-        })
-      } else {
-        let stringRow = JSON.stringify(row)
-        if (stringRow === "[true,false,false,false,true]" 
-          || stringRow === "[false,true,false,true,false]"
-          || stringRow === "[true,true,true,false,false]"
-          || stringRow === "[false,false,true,true,true]"
-          || stringRow === "[true,false,true,true,false]"
-          || stringRow === "[false,true,true,false,true]"
-          || stringRow === "[true,true,false,true,true]") 
-        {
-          return this.publishBoard(JSON.parse(original))
-        } else {
-          return this.randomizeBoard(x)
-        }
-      }
-    })
-  }
+  //   board.map((row, rowIndex) => {
+  //     if (rowIndex < 4) {
+  //       row.map((tile, colIndex) => {
+  //         if (tile) {
+  //           board = this.updateBoard(rowIndex + 1, colIndex, board, false)
+  //         }
+  //       })
+  //     } else {
+  //       let stringRow = JSON.stringify(row)
+  //       if (stringRow === "[true,false,false,false,true]" 
+  //         || stringRow === "[false,true,false,true,false]"
+  //         || stringRow === "[true,true,true,false,false]"
+  //         || stringRow === "[false,false,true,true,true]"
+  //         || stringRow === "[true,false,true,true,false]"
+  //         || stringRow === "[false,true,true,false,true]"
+  //         || stringRow === "[true,true,false,true,true]") 
+  //       {
+  //         return this.publishBoard(JSON.parse(original))
+  //       } else {
+  //         return this.randomizeBoard(x)
+  //       }
+  //     }
+  //   })
+  // }
 
 
 
@@ -161,6 +180,7 @@ class App extends React.Component{
 
   componentDidMount() {
     this.getWords()
+    this.buildBoard()
   }
 
   //
@@ -173,7 +193,7 @@ class App extends React.Component{
         <div className='bg'></div>
         <div className="comps-wrapper">
           <Display 
-            turns={this.state.turns}
+            words={Object.keys(this.state.words)}
             restart={this.restart}
             />
           <Board
