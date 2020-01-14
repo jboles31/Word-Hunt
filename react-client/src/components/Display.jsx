@@ -7,15 +7,17 @@ const Display = ( props ) => {
       <div className='restart-container'>
         <div className='restart' onClick={() => props.restart()}>Restart</div>  
       </div>
-      <div className='turn-container'>
-        <div className='turn-title'>Turns:</div>
-        <div className='turn-number'>{props.turns}</div>
+      <div className='word-container'>
+        <div className='word-title'>Words:</div>
+        <div className='word-number'>{props.words[0]}</div>
+        <div className='word-number'>{props.words[1]}</div>
+        <div className='word-number'>{props.words[2]}</div>
+        <div className='word-number'>{props.words[3]}</div>
+        <div className='word-number'>{props.words[4]}</div>
       </div>
       <div className='description-container'>
         <div className='objective-title'>Objective:</div>
-        <div className='objective'>Turn all tiles off (dark) to win the game</div>
-        <div className='hint-title'>Hint:</div>
-        <div className='hint'>Clicking a tile will toggle it and all of it's adjacent tiles</div>
+        <div className='objective'>Find all the listed words in the board</div>
       </div>
     </div>
   )
