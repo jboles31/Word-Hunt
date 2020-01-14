@@ -15,11 +15,11 @@ const Display = ( props ) => {
         wordContainer.push(<div
           className='unfound'
           key={`${key}`}
-          >{key}</div>)
+        >{key}</div>)
       }
     })
 
-  return (<div className='word-container'>{wordContainer}</div>)
+  return (<div className='status-container'>{wordContainer}</div>)
 
   }
 
