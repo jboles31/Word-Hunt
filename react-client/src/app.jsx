@@ -12,6 +12,7 @@ class App extends React.Component{
     super(props)
     this.state = {
       board: [],
+      keys: [],
       words: {},
       win: false
     }
@@ -34,6 +35,7 @@ class App extends React.Component{
 
   getWords() {
     let list = words
+    let result = []
     let targets = {}
 
     let chooseWords = () => {
@@ -44,14 +46,17 @@ class App extends React.Component{
         targets[choice] = false
         chooseWords()
       } else {
+        result = Object.keys(targets)
         return
       }
 
     } 
     chooseWords()
 
+    console.log('targets', targets)
     this.setState({
-      words: targets
+      words: targets,
+      keys: result
     })
   }
   // Radomize
@@ -193,7 +198,8 @@ class App extends React.Component{
         <div className='bg'></div>
         <div className="comps-wrapper">
           <Display 
-            words={Object.keys(this.state.words)}
+            words={this.state.words}
+            keys={this.state.keys}
             restart={this.restart}
             />
           <Board
