@@ -132,16 +132,21 @@ html, body {
           display: flex;
           justify-content: space-between;
           flex-direction: row;
-          height: 18%;
+          height: 15%;
           width: 100%;
           
           .lit-tile {
-            height: 100%;
-            width: 18%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: black;
+            font-size: 200%;
             background-color: #eeeeee;
             border-radius: 2vh;
             border: 2px solid grey;
             cursor: pointer;
+            height: 100%;
+            width: 15%;
           }
 
           .lit-tile:hover {
