@@ -8,19 +8,12 @@ const Board = ( props ) => {
 
     board.map((row, rowIndex) => {
       result = []
-      row.map((boolean, colIndex) => {
-        boolean ? 
+      row.map((letter, colIndex) => {
           result.push(<div 
             className='lit-tile' 
             key={`${rowIndex}x${colIndex}`} 
             onClick={() => props.update(rowIndex, colIndex, props.board, true)}
-          ></div>)
-        :
-          result.push(<div 
-            className='unlit-tile' 
-            key={`${rowIndex}x${colIndex}`} 
-            onClick={() => props.update(rowIndex, colIndex, props.board, true)}
-          ></div>)  
+          >{letter}</div>)
       })
       tileContainer.push(<div 
         className='row' 
