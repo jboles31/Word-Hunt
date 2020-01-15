@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom'
 import Display from './components/Display.jsx'
 import Board from './components/Board.jsx'
 import Win from './components/Win.jsx'
-import alphabet from './assests/alphabet.js'
-import words from './assests/words.js'
+import alphabet from './assets/alphabet.js'
+import words from './assets/words.js'
 import style from './main.scss';
 
 class App extends React.Component{
@@ -17,12 +17,28 @@ class App extends React.Component{
       win: false
     }
 
+    // words {
+    //   phish: false
+    // }
+
+    // words: {
+    //   phish: {
+    //     found: false,
+    //     word: 'phish'
+    //   },
+    //    joy: {
+    //
+    //    }
+    // }
+
     this.getWords = this.getWords.bind(this)
+    this.buildBoard = this.buildBoard.bind(this)
+    this.placeWords = this.placeWords.bind(this)
 
     // this.randomizeBoard = this.randomizeBoard.bind(this)
-    this.publishBoard = this.publishBoard.bind(this)
-    this.updateBoard = this.updateBoard.bind(this)
-    this.checkBoard = this.checkBoard.bind(this)
+    // this.publishBoard = this.publishBoard.bind(this)
+    // this.updateBoard = this.updateBoard.bind(this)
+    // this.checkBoard = this.checkBoard.bind(this)
     // this.checkSolvability = this.checkSolvability.bind(this)
     this.restart = this.restart.bind(this)
   }
@@ -49,17 +65,16 @@ class App extends React.Component{
         result = Object.keys(targets)
         return
       }
-
     } 
     chooseWords()
 
-    console.log('targets', targets)
     this.setState({
       words: targets,
       keys: result
     })
   }
-  // Radomize
+  
+  // Build Board
 
   buildBoard() {
     let list = alphabet
@@ -77,107 +92,63 @@ class App extends React.Component{
     })
   }
 
-  // Publish Board
+  // Place Words
 
-  publishBoard(board) {
-    this.setState({
-      board: board
-    })
-  }
-
-  // Update
-
-  updateBoard(tileRow, tileCol, board, game) {
-
-    board.map((row, rowIndex) => {
-      if (rowIndex === tileRow - 1 
-        || rowIndex === tileRow + 1) 
-      {
-        row[tileCol] = !row[tileCol]
-      } else if (rowIndex === tileRow) {
-        row.map((col, colIndex) => {
-          if (colIndex === tileCol 
-            || colIndex === tileCol + 1 
-            || colIndex === tileCol - 1) 
-          {
-            row[colIndex] = !col
-          }
-        })
-      }
-    })
-
-    if (game) {
-      let turns = this.state.turns + 1
-      this.setState({
-        board: board,
-        turns: turns
-      });
-      this.checkBoard()
-    } else {
-      return board
+  placeWords(word) {
+    // Pick a spot
+    const random = () => {
+      return Math.floor(Math.random * 4)
     }
+    
+    let start = [random(), random()]
+    
+    // Pick an orientation Vert, Horiz, Diag
+    const orientation = () => {
+      let orientation = ['V', 'H', 'D']
+      let random = Math.floor(Math.random * 3)
+      return orientation[random];
+    }
+      
+    let direction = orientation()
+
+    // Check length of word
+    let length = word.length
+
+    // Does it fit on this path?
+
+
+    
+    // Check if it's path has any of the same coordinates as any other word
+    // If there is a cross over, check if letters are the same, if not pick new spot
+    // Add path of word stored in tuples (ex. [[1,2],[1,3],[1,4],[1,5]])
 
   }
-
 
   // Check for Wins
 
-  checkBoard() {
-    let win = true
+  checkforWin() {
+    let keys = this.state.keys
+    let words = this.state.words
 
-    this.state.board.map(row => {
-      row.map(tile => {
-        if (tile) { win = false }
-      })
+    keys.map(key => {
+      if (!words[key]) {
+        return
+      }
     })
-    
-    if (win) {
-      this.setState({
-        win: true
-      })
-    }
+
+    this.setState({
+      win: true
+    })
   }
-
-  // Check if Board is Solvable
-
-  // checkSolvability(board, x) {
-  //   let original = JSON.stringify(board)
-
-  //   board.map((row, rowIndex) => {
-  //     if (rowIndex < 4) {
-  //       row.map((tile, colIndex) => {
-  //         if (tile) {
-  //           board = this.updateBoard(rowIndex + 1, colIndex, board, false)
-  //         }
-  //       })
-  //     } else {
-  //       let stringRow = JSON.stringify(row)
-  //       if (stringRow === "[true,false,false,false,true]" 
-  //         || stringRow === "[false,true,false,true,false]"
-  //         || stringRow === "[true,true,true,false,false]"
-  //         || stringRow === "[false,false,true,true,true]"
-  //         || stringRow === "[true,false,true,true,false]"
-  //         || stringRow === "[false,true,true,false,true]"
-  //         || stringRow === "[true,true,false,true,true]") 
-  //       {
-  //         return this.publishBoard(JSON.parse(original))
-  //       } else {
-  //         return this.randomizeBoard(x)
-  //       }
-  //     }
-  //   })
-  // }
-
 
 
   // Restart Game
 
   restart() {
     this.setState({
-      turns: 0,
       win: false
     })
-    this.randomizeBoard(5)
+    this.buildBoard()
   }
 
   //
@@ -204,13 +175,13 @@ class App extends React.Component{
             />
           <Board
             board={this.state.board}
-            update={this.updateBoard}
+            // update={this.updateBoard}
           />
         </div>        
         {this.state.win ? 
         <Win 
-          turns={this.state.turns}
-          restart={this.restart}
+          // turns={this.state.turns}
+          // restart={this.restart}
         />
         : null
         }
@@ -220,3 +191,46 @@ class App extends React.Component{
 }
 
 ReactDOM.render(<App />, document.getElementById('app'));
+
+// Publish Board
+
+  // publishBoard(board) {
+  //   this.setState({
+  //     board: board
+  //   })
+  // }
+
+  // Update
+
+  // updateBoard(tileRow, tileCol, board, game) {
+
+  //   board.map((row, rowIndex) => {
+  //     if (rowIndex === tileRow - 1 
+  //       || rowIndex === tileRow + 1) 
+  //     {
+  //       row[tileCol] = !row[tileCol]
+  //     } else if (rowIndex === tileRow) {
+  //       row.map((col, colIndex) => {
+  //         if (colIndex === tileCol 
+  //           || colIndex === tileCol + 1 
+  //           || colIndex === tileCol - 1) 
+  //         {
+  //           row[colIndex] = !col
+  //         }
+  //       })
+  //     }
+  //   })
+
+  //   if (game) {
+  //     let turns = this.state.turns + 1
+  //     this.setState({
+  //       board: board,
+  //       turns: turns
+  //     });
+  //     this.checkBoard()
+  //   } else {
+  //     return board
+  //   }
+
+  // }
+
