@@ -127,8 +127,26 @@ class App extends React.Component{
             }
           }
           // else probably restart placeWords(word)
-        case 'H': 
-        case 'D': 
+        case 'H':
+          if (spot[0] + length <= 6) {
+            for (let i = 0; i < length; i++) {
+              path.push([spot[spot[0] + i], spot[1]])
+            }
+          }
+          // else probably restart placeWords(word)
+        case 'D':
+          //up to the right
+          if (spot[0] + length <= 6 && spot[1] + length <= 6) {
+            for (let i = 0; i < length; i++) {
+              path.push([spot[spot[0] + i], spot[spot[1] + i]])
+            }
+          } 
+          // down to the right
+          else if (spot[0] + length <= 6 && spot[1] - length >= 0) {
+            for (let i = 0; i < length; i++) {
+              path.push([spot[spot[0] + i], spot[spot[1] - i]])
+            }
+          }
       }
 
 
