@@ -114,7 +114,28 @@ class App extends React.Component{
     // Check length of word
     let length = word.length
 
-    // Does it fit on this path?
+    //Fit it to a path
+    const assignWord = (spot, orientation) => {
+      let path = []
+
+      switch (orientation) {
+        case 'V':
+          // Does it fit on this path?
+          if (spot[1] + length <= 6) {
+            for (let i = 0; i < length; i++) {
+              path.push([spot[0], spot[spot[1] + i]])
+            }
+          }
+          // else probably restart placeWords(word)
+        case 'H': 
+        case 'D': 
+      }
+
+
+    }
+
+    assignWord(start, direction)
+
 
 
     
