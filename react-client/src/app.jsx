@@ -115,8 +115,9 @@ class App extends React.Component{
     let length = word.length
 
     //Fit it to a path
-    const assignWord = (spot, orientation) => {
-      let path = []
+    let path = []
+
+    const assignPath = (spot, orientation) => {
 
       switch (orientation) {
         case 'V':
@@ -149,11 +150,34 @@ class App extends React.Component{
           }
       }
 
+      
+      
+    }
+    
+    assignPath(start, direction)
+    
+    // Now we need to place this path on the board
+
+    const placePath = (path, word) => {
+      
+      if (path.length !== word.length) {
+        console.log('path !== word')
+        return
+      }
+
+      let newBoard = this.state.board
+
+      for (let i = 0; i < word.length; i++) {
+        newBoard[path[i][0]][path[i][1]] === word[0]
+      }
+
+      this.setState({
+        board: newBoard
+      })
 
     }
 
-    assignWord(start, direction)
-
+    placePath(path, word)
 
 
     
