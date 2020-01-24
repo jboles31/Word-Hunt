@@ -13,27 +13,20 @@ class App extends React.Component{
     this.state = {
       board: [],
       keys: [],
-      words: {},
+      words: [],
       win: false
     }
 
-    // words {
-    //   phish: false
-    // }
-
-    // words: {
-    //   phish: {
-    //     found: false,
-    //     word: 'phish'
-    //   },
-    //    joy: {
-    //
-    //    }
-    // }
+    // words: [ {
+    //   word: 'free',
+    //   found: false,
+    //   path: [[a,d],[a,c],[a,b]]
+    //  }]
 
     this.getWords = this.getWords.bind(this)
     this.buildBoard = this.buildBoard.bind(this)
     this.placeWords = this.placeWords.bind(this)
+    // this.initiate = this.initiate.bind(this)
 
     // this.randomizeBoard = this.randomizeBoard.bind(this)
     // this.publishBoard = this.publishBoard.bind(this)
@@ -52,17 +45,26 @@ class App extends React.Component{
   getWords() {
     let list = words
     let result = []
-    let targets = {}
-
+    let targets = []
+    
     let chooseWords = () => {
-      let length = Object.keys(targets).length
+      let length = targets.length
+      let target = {}
 
       if (length < 5) {
-        let choice = list[Math.floor(Math.random() * Math.floor(list.length))]
-        targets[choice] = false
+        let index = Math.floor(Math.random() * Math.floor(list.length))
+        let choice = list[index]
+        
+        list.splice(index, 1)
+
+        target = {
+          'word': choice,
+          'found': false
+        }
+        targets.push(target)
+        result.push(choice)
         chooseWords()
       } else {
-        result = Object.keys(targets)
         return
       }
     } 
@@ -71,6 +73,10 @@ class App extends React.Component{
     this.setState({
       words: targets,
       keys: result
+    }, () => {
+      this.state.words.forEach(word => {
+        this.placeWords(word.word)
+      })
     })
   }
   
@@ -86,18 +92,30 @@ class App extends React.Component{
       }
       results.push(arr)
     }
-    console.log('results', results)
+
     this.setState({
       board: results
     })
+
   }
 
   // Place Words
 
+  // initiate() {
+  //   let words = this.state.words
+
+  //   console.log('words', words)
+
+  //   words.forEach(word => {
+  //     this.placeWords(word.word)
+  //   })
+  // } 
+
   placeWords(word) {
+    console.log('placeWords ran');
     // Pick a spot
     const random = () => {
-      return Math.floor(Math.random * 4)
+      return Math.floor(Math.random() * 4)
     }
     
     let start = [random(), random()]
@@ -105,7 +123,7 @@ class App extends React.Component{
     // Pick an orientation Vert, Horiz, Diag
     const orientation = () => {
       let orientation = ['V', 'H', 'D']
-      let random = Math.floor(Math.random * 3)
+      let random = Math.floor(Math.random() * 3)
       return orientation[random];
     }
       
@@ -117,67 +135,99 @@ class App extends React.Component{
     //Fit it to a path
     let path = []
 
+        // Now we need to place this path on the board
+
+        const placePath = (path, word) => {
+      
+          if (path.length !== word.length) {
+            console.log('path !== word', path, word.length)
+            return
+          }
+    
+          let newBoard = this.state.board
+    
+          for (let i = 0; i < word.length; i++) {
+            newBoard[path[i][0]][path[i][1]] = word[i]
+          }
+    
+          
+          this.setState({
+            board: newBoard
+          }, () => {
+            console.log('board state updatesd with: ', word)
+          })
+          return
+        }
+
     const assignPath = (spot, orientation) => {
 
+      console.log('assignpath', spot, orientation)
+
       switch (orientation) {
+
         case 'V':
-          // Does it fit on this path?
           if (spot[1] + length <= 6) {
+            console.log('spot', spot)
+            // debugger;
             for (let i = 0; i < length; i++) {
-              path.push([spot[0], spot[spot[1] + i]])
+              path.push([spot[0], spot[1] + i])
             }
+            console.log('path', path)
+            placePath(path, word)
+
+          } else {
+            this.placeWords(word)
           }
-          // else probably restart placeWords(word)
+
         case 'H':
           if (spot[0] + length <= 6) {
+            console.log('spot', spot)
             for (let i = 0; i < length; i++) {
-              path.push([spot[spot[0] + i], spot[1]])
+              path.push([spot[0] + i, spot[1]])
             }
+            console.log('path', path)
+            placePath(path, word)
+
+          } else {
+            this.placeWords(word)
           }
-          // else probably restart placeWords(word)
+
         case 'D':
-          //up to the right
           if (spot[0] + length <= 6 && spot[1] + length <= 6) {
+            console.log('spot', spot)
+
             for (let i = 0; i < length; i++) {
-              path.push([spot[spot[0] + i], spot[spot[1] + i]])
+              path.push([spot[0] + i, spot[1] + i])
             }
-          } 
-          // down to the right
+            console.log('path', path)
+            placePath(path, word)
+
+
+          }
           else if (spot[0] + length <= 6 && spot[1] - length >= 0) {
+            console.log('spot', spot)
+
             for (let i = 0; i < length; i++) {
-              path.push([spot[spot[0] + i], spot[spot[1] - i]])
+              path.push([spot[0] + i, spot[1] - i])
             }
+            console.log('path', path)
+            placePath(path, word)
+
+
+          } else {
+            this.placeWords(word)
           }
       }
 
-      
+      return
       
     }
     
     assignPath(start, direction)
     
-    // Now we need to place this path on the board
 
-    const placePath = (path, word) => {
-      
-      if (path.length !== word.length) {
-        console.log('path !== word')
-        return
-      }
 
-      let newBoard = this.state.board
-
-      for (let i = 0; i < word.length; i++) {
-        newBoard[path[i][0]][path[i][1]] === word[0]
-      }
-
-      this.setState({
-        board: newBoard
-      })
-
-    }
-
-    placePath(path, word)
+    // placePath(path, word)
 
 
     
@@ -189,20 +239,20 @@ class App extends React.Component{
 
   // Check for Wins
 
-  checkforWin() {
-    let keys = this.state.keys
-    let words = this.state.words
+  // checkforWin() {
+  //   let keys = this.state.keys
+  //   let words = this.state.words
 
-    keys.map(key => {
-      if (!words[key]) {
-        return
-      }
-    })
+  //   keys.map(key => {
+  //     if (!words[key]) {
+  //       return
+  //     }
+  //   })
 
-    this.setState({
-      win: true
-    })
-  }
+  //   this.setState({
+  //     win: true
+  //   })
+  // }
 
 
   // Restart Game
@@ -220,6 +270,7 @@ class App extends React.Component{
   componentDidMount() {
     this.getWords()
     this.buildBoard()
+
   }
 
   //
