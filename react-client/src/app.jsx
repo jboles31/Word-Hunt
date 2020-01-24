@@ -112,7 +112,7 @@ class App extends React.Component{
   // } 
 
   placeWords(word) {
-    console.log('placeWords ran');
+    console.log('1: placeWords ran');
     // Pick a spot
     const random = () => {
       return Math.floor(Math.random() * 4)
@@ -137,82 +137,87 @@ class App extends React.Component{
 
         // Now we need to place this path on the board
 
-        const placePath = (path, word) => {
+    const placePath = (path, word) => {
+  
+      if (path.length !== word.length) {
+        return
+      }
+
+      let newBoard = this.state.board
+
+      for (let i = 0; i < word.length; i++) {
+        newBoard[path[i][0]][path[i][1]] = word[i]
+      }
+      debugger;
+      console.log('5: updated board', newBoard)
       
-          if (path.length !== word.length) {
-            console.log('path !== word', path, word.length)
-            return
-          }
-    
-          let newBoard = this.state.board
-    
-          for (let i = 0; i < word.length; i++) {
-            newBoard[path[i][0]][path[i][1]] = word[i]
-          }
-    
-          
-          this.setState({
-            board: newBoard
-          }, () => {
-            console.log('board state updatesd with: ', word)
-          })
-          return
-        }
+      this.setState({
+        board: newBoard
+      }, () => {
+        console.log('6: board state updatesd with: ', word)
+      })
+      return
+    }
 
     const assignPath = (spot, orientation) => {
 
-      console.log('assignpath', spot, orientation)
+      console.log('2: assignpath', spot, orientation)
 
       switch (orientation) {
-
         case 'V':
-          if (spot[1] + length <= 6) {
-            console.log('spot', spot)
-            // debugger;
-            for (let i = 0; i < length; i++) {
-              path.push([spot[0], spot[1] + i])
-            }
-            console.log('path', path)
-            placePath(path, word)
+          debugger;
+          if (spot[1] + length <= 6 ) {
+            console.log('3: spot', spot)
 
+            for (let i = 0; i < length; i++) {
+              path.push([spot[0] + i, spot[1]])
+            }
+            console.log('4: path', path)
+            placePath(path, word)
+            return
           } else {
             this.placeWords(word)
           }
 
         case 'H':
-          if (spot[0] + length <= 6) {
-            console.log('spot', spot)
-            for (let i = 0; i < length; i++) {
-              path.push([spot[0] + i, spot[1]])
-            }
-            console.log('path', path)
-            placePath(path, word)
+          debugger;
+        
+          if (spot[0] + length <= 6 ) {
+            console.log('3: spot', spot)
 
+            for (let i = 0; i < length; i++) {
+              path.push([spot[0], spot[1] + i])
+            }
+            console.log('4: path', path)
+            placePath(path, word)
+            return
           } else {
             this.placeWords(word)
           }
 
         case 'D':
+          debugger;
+
           if (spot[0] + length <= 6 && spot[1] + length <= 6) {
-            console.log('spot', spot)
+            console.log('3: spot', spot)
+
+            for (let i = 0; i < length; i++) {
+              path.push([spot[0] - i, spot[1] + i])
+            }
+            console.log('4: path', path)
+            placePath(path, word)
+            return
+
+          }
+          else if (spot[1] + length <= 6 && spot[1] + length <= 6) {
+            console.log('3: spot', spot)
 
             for (let i = 0; i < length; i++) {
               path.push([spot[0] + i, spot[1] + i])
             }
-            console.log('path', path)
+            console.log('4: path', path)
             placePath(path, word)
-
-
-          }
-          else if (spot[0] + length <= 6 && spot[1] - length >= 0) {
-            console.log('spot', spot)
-
-            for (let i = 0; i < length; i++) {
-              path.push([spot[0] + i, spot[1] - i])
-            }
-            console.log('path', path)
-            placePath(path, word)
-
+            return
 
           } else {
             this.placeWords(word)
@@ -226,7 +231,7 @@ class App extends React.Component{
     assignPath(start, direction)
     
 
-
+    return
     // placePath(path, word)
 
 
